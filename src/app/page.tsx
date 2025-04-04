@@ -8,6 +8,25 @@ export default function Game(){
   // Theres another way where you keep track of placed pieces and current piece separately, but then you would have to figure out how 
 
   const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray());
+  var bodyCurrentPiece = createPiece();
+
+  // Re-add current falling piece in array
+  function movePiece(prevY: number, prevX: number, newY: number, newX: number){
+    var nextBoardArray = [...currentBoardArray]
+    for (var i = 0; i < bodyCurrentPiece.length; i++){
+      var xPos = bodyCurrentPiece[i][0];
+      var yPos = bodyCurrentPiece[i][1];
+      nextBoardArray[prevY + yPos][prevX + xPos] = 0;
+    }
+
+    for (var i = 0; i < bodyCurrentPiece.length; i++){
+      var xPos = bodyCurrentPiece[i][0];
+      var yPos = bodyCurrentPiece[i][1];
+      nextBoardArray[newY + yPos][newX + xPos] = 1;
+    }
+
+    setCurrentBoardArray(nextBoardArray);
+  }
 
   // Array[y][x]
   function createEmptyArray(){
@@ -21,7 +40,25 @@ export default function Game(){
     }
     return array
   }
+
+  function createPiece(){
+    return[[0,0], [0,1], [1,0], [1,1]]
+  }
+
+  function startGame(){  
+    bodyCurrentPiece = createPiece();
+    let timer = setTimeout(makeFallingPiece, 1000);
+  }
+
+  function makeFallingPiece(){
+    let timer = setTimeout(makeFallingPiece, 1000);
+    var newY = yPosCurrent < 20 ? yPosCurrent + 1 : yPosCurrent;
+    movePiece(yPosCurrent, xPosCurrent, newY, xPosCurrent)
+    yPosCurrent = newY;
+  }
+
     return (<div>
+    <button onClick={startGame}>Start Game</button>
     <Board boardArray={currentBoardArray}></Board>
     </div>
     );
