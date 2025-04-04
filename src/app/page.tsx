@@ -2,6 +2,32 @@
 import React, { useEffect, useState } from "react";
 import { Tetromino } from "./tetromino";
 
+export default function Game(){
+  var yPosCurrent = 2;
+  var xPosCurrent = 4;
+  // Theres another way where you keep track of placed pieces and current piece separately, but then you would have to figure out how 
+
+  const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray());
+
+  // Array[y][x]
+  function createEmptyArray(){
+    var array = [];
+    for (var i = 0; i < 20; i++){
+      var row = [];
+      for (var j = 0; j < 10; j++){
+        row.push(0);
+      }
+      array.push(row);
+    }
+    return array
+  }
+    return (<div>
+    <Board boardArray={currentBoardArray}></Board>
+    </div>
+    );
+}
+
+
 export function Piece( body: Array<Array<number>>, xOrigin: number, yOrigin: number ){
   body = body;
   xOrigin = xOrigin;
