@@ -21,3 +21,11 @@ function Board({ boardArray }){
   }
   return (boardRender);
 }
+
+function Cell({ xPos, yPos, filled }){
+  if (filled)
+    return (<div className="filled-cell"></div>)
+  
+  return (<div className="cell">
+  </div>);
+}
