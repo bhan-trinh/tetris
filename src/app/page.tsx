@@ -10,6 +10,38 @@ export default function Game(){
   const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray());
   var bodyCurrentPiece = createPiece();
 
+  // Handle key press
+  useEffect(() =>
+    {
+      function handleKeyDown(e: KeyboardEvent){
+        if (e.key === 'ArrowLeft'){
+          var newX = xPosCurrent > 0 ? xPosCurrent - 1 : xPosCurrent;
+          movePiece(yPosCurrent, xPosCurrent, yPosCurrent, newX);
+          xPosCurrent = newX;
+        }
+
+        if (e.key === 'ArrowRight'){
+          var newX = xPosCurrent < 9 ? xPosCurrent + 1 : xPosCurrent;
+          movePiece(yPosCurrent, xPosCurrent, yPosCurrent, newX);
+          xPosCurrent = newX;
+        }
+      }
+  
+    document.addEventListener('keydown', handleKeyDown);
+  
+    return function cleanUp(){
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+  });
+
+  function removePiece(){
+    
+  }
+
+  function addPiece(){
+
+  }
+
   // Re-add current falling piece in array
   function movePiece(prevY: number, prevX: number, newY: number, newX: number){
     var nextBoardArray = [...currentBoardArray]
@@ -43,6 +75,10 @@ export default function Game(){
 
   function createPiece(){
     return[[0,0], [0,1], [1,0], [1,1]]
+  }
+
+  function place(){
+    
   }
 
   function startGame(){  
