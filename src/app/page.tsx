@@ -10,7 +10,7 @@ export default function Game(){
   
   // Array[x][y]
   const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray(10, 20));
-  var bodyCurrentPiece = createPiece();
+  const bodyCurrentPiece = useRef(createPiece());
 
   // Handle key press
   useEffect(() =>
@@ -39,25 +39,25 @@ export default function Game(){
   // Body
   function getWidth() {
     var width = 0;
-    for (var i = 0; i < bodyCurrentPiece.length; i++){
-      width = width < bodyCurrentPiece[i][0] ? bodyCurrentPiece[i][0] : width;
+    for (var i = 0; i < bodyCurrentPiece.current.length; i++){
+      width = width < bodyCurrentPiece.current[i][0] ? bodyCurrentPiece.current[i][0] : width;
     }
     return width
   }
 
   function getHeight(){
     var height = 0;
-    for (var i = 0; i < bodyCurrentPiece.length; i++){
-      height = height < bodyCurrentPiece[i][1] ? bodyCurrentPiece[i][1] : height;
+    for (var i = 0; i < bodyCurrentPiece.current.length; i++){
+      height = height < bodyCurrentPiece.current[i][1] ? bodyCurrentPiece.current[i][1] : height;
     }
     return height;
   }
 
   function getSkirt(){
       var skirt = [];
-      for (var i = 0; i < bodyCurrentPiece.length; i++){
-          if (bodyCurrentPiece[i][0] == 0){
-              skirt.push(bodyCurrentPiece[i][1]);
+      for (var i = 0; i < bodyCurrentPiece.current.length; i++){
+          if (bodyCurrentPiece.current[i][0] == 0){
+              skirt.push(bodyCurrentPiece.current[i][1]);
           }
       }
     }
@@ -79,9 +79,11 @@ export default function Game(){
       setCurrentBoardArray(newArray);
     }
   }
-  
+
   function moveDown(){
-    if (yPosCurrent.current == 0) {}
+    if (yPosCurrent.current == 0) {
+      place()
+    }
     else{
       var newArray = removePiece();
       yPosCurrent.current -= 1; // why does this work and not setState?
@@ -102,7 +104,7 @@ export default function Game(){
   }
 
   function addPiece(){
-    var positionCurrentPiece = calculatePosition(bodyCurrentPiece, xPosCurrent.current, yPosCurrent.current)
+    var positionCurrentPiece = calculatePosition(bodyCurrentPiece.current, xPosCurrent.current, yPosCurrent.current)
     var newArray = [...currentBoardArray];
     for (const [x, y] of positionCurrentPiece){
       newArray[x][y] = 1;
@@ -111,7 +113,7 @@ export default function Game(){
   }
 
   function removePiece(){
-    var positionCurrentPiece = calculatePosition(bodyCurrentPiece, xPosCurrent.current, yPosCurrent.current)
+    var positionCurrentPiece = calculatePosition(bodyCurrentPiece.current, xPosCurrent.current, yPosCurrent.current)
     var newArray = [...currentBoardArray];
     for (const [x, y] of positionCurrentPiece){
       newArray[x][y] = 0;
@@ -124,7 +126,19 @@ export default function Game(){
   }
 
   function place(){
+    var positionCurrentPiece = calculatePosition(bodyCurrentPiece.current, xPosCurrent.current, yPosCurrent.current)
+    // Lock the current piece in place
+    var newArray = [...currentBoardArray];
+    for (const [x, y] of positionCurrentPiece){
+      newArray[x][y] = 2;
+    } 
     
+    console.log("Locked!")
+    // Create new piece
+    bodyCurrentPiece.current = createPiece();
+    xPosCurrent.current = 4;
+    yPosCurrent.current = 17;
+
   }
 
   function startGame(){ 
