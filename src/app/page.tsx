@@ -36,28 +36,61 @@ export default function Game(){
     }
   });
 
+  // Body
+  function getWidth() {
+    var width = 0;
+    for (var i = 0; i < bodyCurrentPiece.length; i++){
+      width = width < bodyCurrentPiece[i][0] ? bodyCurrentPiece[i][0] : width;
+    }
+    return width
+  }
+
+  function getHeight(){
+    var height = 0;
+    for (var i = 0; i < bodyCurrentPiece.length; i++){
+      height = height < bodyCurrentPiece[i][1] ? bodyCurrentPiece[i][1] : height;
+    }
+    return height;
+  }
+
+  function getSkirt(){
+      var skirt = [];
+      for (var i = 0; i < bodyCurrentPiece.length; i++){
+          if (bodyCurrentPiece[i][0] == 0){
+              skirt.push(bodyCurrentPiece[i][1]);
+          }
+      }
+    }
+
   function moveLeft(){
+    if (xPosCurrent.current > 0) {
     var newArray = removePiece();
     xPosCurrent.current -= 1; // why does this work and not setState?
     newArray = addPiece();
     setCurrentBoardArray(newArray);
+    }
   }
 
   function moveRight(){
-    var newArray = removePiece();
-    xPosCurrent.current += 1; // why does this work and not setState?
-    newArray = addPiece();
-    setCurrentBoardArray(newArray);
+    if (xPosCurrent.current + getWidth() < 9) {
+      var newArray = removePiece();
+      xPosCurrent.current += 1; // why does this work and not setState?
+      newArray = addPiece();
+      setCurrentBoardArray(newArray);
+    }
   }
   
   function moveDown(){
-    var newArray = removePiece();
-    yPosCurrent.current -= 1; // why does this work and not setState?
-    newArray = addPiece();
-    setCurrentBoardArray(newArray);
+    if (yPosCurrent.current == 0) {}
+    else{
+      var newArray = removePiece();
+      yPosCurrent.current -= 1; // why does this work and not setState?
+      newArray = addPiece();
+      setCurrentBoardArray(newArray);
+    }
   }
 
-  function calculatePosition ( bodyCurrentPiece: Array<Array<number>>, xPos, yPos ){
+  function calculatePosition ( bodyCurrentPiece: Array<Array<number>>, xPos: number, yPos: number ){
     return bodyCurrentPiece.map((coordinateSet) => {
       return coordinateSet.map((coordinate, axis) => {
         return coordinate = axis === 0 ? coordinate + xPos : coordinate + yPos
@@ -86,7 +119,6 @@ export default function Game(){
     return newArray
   }
 
-
   function createPiece(){
     return[[0,0], [0,1], [1,0], [1,1]]
   }
@@ -98,7 +130,7 @@ export default function Game(){
   function startGame(){ 
     const newArray = addPiece();
     setCurrentBoardArray(newArray);
-    // let timer = setTimeout(makeFallingPiece, 1000);
+    let timer = setTimeout(makeFallingPiece, 1000);
   }
 
   function makeFallingPiece(){
@@ -152,38 +184,3 @@ function createEmptyArray( rows: number, columns: number ){
   return array
 }
 
-
-export function Piece( body: Array<Array<number>>, xOrigin: number, yOrigin: number ){
-  body = body;
-  xOrigin = xOrigin;
-  yOrigin = yOrigin;
-
-  
-
-  // Body
-  function getWidth(){
-    var width = 0;
-    for (var i = 0; i < body.length; i++){
-      width = width < body[i][0] ? body[i][0] : width;
-    }
-    return width
-  }
-
-  function getHeight(){
-    var height = 0;
-    for (var i = 0; i < body.length; i++){
-      height = height < body[i][1] ? body[i][1] : height;
-    }
-    return height;
-  }
-
-  function getSkirt(){
-      var skirt = [];
-      for (var i = 0; i < body.length; i++){
-          if (body[i][0] == 0){
-              skirt.push(body[i][1]);
-          }
-      }
-}
-
-}
