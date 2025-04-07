@@ -7,7 +7,9 @@ export default function Game(){
   var xPosCurrent = 4;
   // Theres another way where you keep track of placed pieces and current piece separately, but then you would have to figure out how 
 
-  const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray());
+  
+  // Array[y][x]
+  const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray(20, 10));
   var bodyCurrentPiece = createPiece();
 
   // Handle key press
@@ -15,15 +17,15 @@ export default function Game(){
     {
       function handleKeyDown(e: KeyboardEvent){
         if (e.key === 'ArrowLeft'){
-          var newX = xPosCurrent > 0 ? xPosCurrent - 1 : xPosCurrent;
-          movePiece(yPosCurrent, xPosCurrent, yPosCurrent, newX);
-          xPosCurrent = newX;
+          moveLeft();
         }
 
         if (e.key === 'ArrowRight'){
-          var newX = xPosCurrent < 9 ? xPosCurrent + 1 : xPosCurrent;
-          movePiece(yPosCurrent, xPosCurrent, yPosCurrent, newX);
-          xPosCurrent = newX;
+          moveRight();
+        }
+
+        if (e.key === 'ArrowDown'){
+          moveDown();
         }
       }
   
@@ -42,37 +44,6 @@ export default function Game(){
 
   }
 
-  // Re-add current falling piece in array
-  function movePiece(prevY: number, prevX: number, newY: number, newX: number){
-    var nextBoardArray = [...currentBoardArray]
-    for (var i = 0; i < bodyCurrentPiece.length; i++){
-      var xPos = bodyCurrentPiece[i][0];
-      var yPos = bodyCurrentPiece[i][1];
-      nextBoardArray[prevY + yPos][prevX + xPos] = 0;
-    }
-
-    for (var i = 0; i < bodyCurrentPiece.length; i++){
-      var xPos = bodyCurrentPiece[i][0];
-      var yPos = bodyCurrentPiece[i][1];
-      nextBoardArray[newY + yPos][newX + xPos] = 1;
-    }
-
-    setCurrentBoardArray(nextBoardArray);
-  }
-
-  // Array[y][x]
-  function createEmptyArray(){
-    var array = [];
-    for (var i = 0; i < 20; i++){
-      var row = [];
-      for (var j = 0; j < 10; j++){
-        row.push(0);
-      }
-      array.push(row);
-    }
-    return array
-  }
-
   function createPiece(){
     return[[0,0], [0,1], [1,0], [1,1]]
   }
@@ -88,9 +59,7 @@ export default function Game(){
 
   function makeFallingPiece(){
     let timer = setTimeout(makeFallingPiece, 1000);
-    var newY = yPosCurrent < 20 ? yPosCurrent + 1 : yPosCurrent;
-    movePiece(yPosCurrent, xPosCurrent, newY, xPosCurrent)
-    yPosCurrent = newY;
+    moveDown();
   }
 
     return (<div>
@@ -100,43 +69,6 @@ export default function Game(){
     );
 }
 
-
-export function Piece( body: Array<Array<number>>, xOrigin: number, yOrigin: number ){
-  body = body;
-  xOrigin = xOrigin;
-  yOrigin = yOrigin;
-
-  
-
-  // Body
-
-
-  function getWidth(){
-    var width = 0;
-    for (var i = 0; i < body.length; i++){
-      width = width < body[i][0] ? body[i][0] : width;
-    }
-    return width
-  }
-
-  function getHeight(){
-    var height = 0;
-    for (var i = 0; i < body.length; i++){
-      height = height < body[i][1] ? body[i][1] : height;
-    }
-    return height;
-  }
-
-  function getSkirt(){
-      var skirt = [];
-      for (var i = 0; i < body.length; i++){
-          if (body[i][0] == 0){
-              skirt.push(body[i][1]);
-          }
-      }
-}
-
-}
 
 // Renders playing board
 function Board({ boardArray }){
@@ -163,4 +95,52 @@ function Cell({ xPos, yPos, filled }){
   
   return (<div className="cell">
   </div>);
+}
+
+function createEmptyArray( rows: number, columns: number ){
+  var array = [];
+  for (var i = 0; i < rows; i++){
+    var row = [];
+    for (var j = 0; j < columns; j++){
+      row.push(0);
+    }
+    array.push(row);
+  }
+  return array
+}
+
+
+export function Piece( body: Array<Array<number>>, xOrigin: number, yOrigin: number ){
+  body = body;
+  xOrigin = xOrigin;
+  yOrigin = yOrigin;
+
+  
+
+  // Body
+  function getWidth(){
+    var width = 0;
+    for (var i = 0; i < body.length; i++){
+      width = width < body[i][0] ? body[i][0] : width;
+    }
+    return width
+  }
+
+  function getHeight(){
+    var height = 0;
+    for (var i = 0; i < body.length; i++){
+      height = height < body[i][1] ? body[i][1] : height;
+    }
+    return height;
+  }
+
+  function getSkirt(){
+      var skirt = [];
+      for (var i = 0; i < body.length; i++){
+          if (body[i][0] == 0){
+              skirt.push(body[i][1]);
+          }
+      }
+}
+
 }
