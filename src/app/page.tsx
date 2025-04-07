@@ -6,10 +6,10 @@ export default function Game(){
   var yPosCurrent = 2;
   var xPosCurrent = 4;
   // Theres another way where you keep track of placed pieces and current piece separately, but then you would have to figure out how 
-
+  // I use 0, 1, 2!
   
-  // Array[y][x]
-  const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray(20, 10));
+  // Array[x][y]
+  const [currentBoardArray, setCurrentBoardArray] = useState(createEmptyArray(10, 20));
   var bodyCurrentPiece = createPiece();
 
   // Handle key press
@@ -36,13 +36,24 @@ export default function Game(){
     }
   });
 
-  function removePiece(){
-    
+  function moveLeft(){}
+
+  function moveRight(){}
+  
+  function moveDown(){}
+
+
+  function calculatePosition ( bodyCurrentPiece, xPos, yPos ){
   }
 
   function addPiece(){
-
   }
+
+  function removePiece(){
+    const newArray = currentBoardArray.map((row) => { return row.map((cell) => cell === 1 ? 0 : cell)})
+    setCurrentBoardArray(newArray);
+  }
+
 
   function createPiece(){
     return[[0,0], [0,1], [1,0], [1,1]]
@@ -74,9 +85,9 @@ export default function Game(){
 function Board({ boardArray }){
 
   var boardRender = []
-  for (var i = 0; i < 20; i++){
+  for (var i = 0; i < 10 ; i++){
     var rowRender = [];
-    for (var j = 0; j < 10; j++){
+    for (var j = 19; j >= 0; j--){
       rowRender.push(<Cell
       key={i * 10 + j}
       xPos={i}
@@ -86,15 +97,14 @@ function Board({ boardArray }){
     }
     boardRender.push(<div className="board-row" key={i}>{rowRender}</div>);
   }
-  return (boardRender);
+  return (<div className="board">{boardRender}</div>);
 }
 
 function Cell({ xPos, yPos, filled }){
   if (filled)
     return (<div className="filled-cell"></div>)
   
-  return (<div className="cell">
-  </div>);
+  return (<div className="cell">{xPos}, {yPos}</div>);
 }
 
 function createEmptyArray( rows: number, columns: number ){
