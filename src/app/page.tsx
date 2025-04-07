@@ -1,10 +1,10 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Tetromino } from "./tetromino";
 
 export default function Game(){
-  var yPosCurrent = 2;
-  var xPosCurrent = 4;
+  const xPosCurrent = useRef(4);
+  const yPosCurrent = useRef(17);
   // Theres another way where you keep track of placed pieces and current piece separately, but then you would have to figure out how 
   // I use 0, 1, 2!
   
@@ -36,22 +36,54 @@ export default function Game(){
     }
   });
 
-  function moveLeft(){}
+  function moveLeft(){
+    var newArray = removePiece();
+    xPosCurrent.current -= 1; // why does this work and not setState?
+    newArray = addPiece();
+    setCurrentBoardArray(newArray);
+  }
 
-  function moveRight(){}
+  function moveRight(){
+    var newArray = removePiece();
+    xPosCurrent.current += 1; // why does this work and not setState?
+    newArray = addPiece();
+    setCurrentBoardArray(newArray);
+  }
   
-  function moveDown(){}
+  function moveDown(){
+    var newArray = removePiece();
+    yPosCurrent.current -= 1; // why does this work and not setState?
+    newArray = addPiece();
+    setCurrentBoardArray(newArray);
+  }
 
-
-  function calculatePosition ( bodyCurrentPiece, xPos, yPos ){
+  function calculatePosition ( bodyCurrentPiece: Array<Array<number>>, xPos, yPos ){
+    return bodyCurrentPiece.map((coordinateSet) => {
+      return coordinateSet.map((coordinate, axis) => {
+        return coordinate = axis === 0 ? coordinate + xPos : coordinate + yPos
+      })
+    }
+      
+  );
+     
   }
 
   function addPiece(){
+    var positionCurrentPiece = calculatePosition(bodyCurrentPiece, xPosCurrent.current, yPosCurrent.current)
+    var newArray = [...currentBoardArray];
+    for (const [x, y] of positionCurrentPiece){
+      newArray[x][y] = 1;
+    } 
+    return newArray
   }
 
   function removePiece(){
-    const newArray = currentBoardArray.map((row) => { return row.map((cell) => cell === 1 ? 0 : cell)})
-    setCurrentBoardArray(newArray);
+    var positionCurrentPiece = calculatePosition(bodyCurrentPiece, xPosCurrent.current, yPosCurrent.current)
+    var newArray = [...currentBoardArray];
+    for (const [x, y] of positionCurrentPiece){
+      newArray[x][y] = 0;
+    } 
+    return newArray
   }
 
 
@@ -63,9 +95,10 @@ export default function Game(){
     
   }
 
-  function startGame(){  
-    bodyCurrentPiece = createPiece();
-    let timer = setTimeout(makeFallingPiece, 1000);
+  function startGame(){ 
+    const newArray = addPiece();
+    setCurrentBoardArray(newArray);
+    // let timer = setTimeout(makeFallingPiece, 1000);
   }
 
   function makeFallingPiece(){
