@@ -27,6 +27,10 @@ export default function Game(){
         if (e.key === 'ArrowDown'){
           moveDown();
         }
+
+        if (e.key === 'ArrowUp'){
+          rotateRight();
+        }
       }
   
     document.addEventListener('keydown', handleKeyDown);
@@ -60,7 +64,20 @@ export default function Game(){
               skirt.push(bodyCurrentPiece.current[i][1]);
           }
       }
+      return skirt;
     }
+
+  function rotateRight(){
+    var newArray = removePiece()
+    var newBody = [];
+    var bodyWidth = getWidth()
+    for (const [x, y] of bodyCurrentPiece.current){
+      newBody.push([y, bodyWidth - x])
+    }
+    bodyCurrentPiece.current = newBody
+    newArray = addPiece();
+    setCurrentBoardArray(newArray);
+  }
 
   function moveLeft(){
     if (xPosCurrent.current > 0) {
