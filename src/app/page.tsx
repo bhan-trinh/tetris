@@ -139,7 +139,21 @@ export default function Game(){
   }
 
   function createPiece(){
-    return[[0,0], [0,1], [1,0], [1,1]]
+    const OPiece = [[0,0], [0,1], [1,0], [1,1]]
+
+    const LPiece = [[0,0], [0,1], [1,1], [2,1]]
+  
+    const TPiece = [[1,0], [0,1], [1,1], [2,1]]
+
+    const IPiece = [[1,0], [1,1], [1,2], [1,3]]
+
+    const ZPiece = [[0,1], [1,0], [1,1], [2,0]]
+
+    const SPiece = [[0,0], [1,0], [1,1], [2,1]]
+
+    const pieceArray = [OPiece, LPiece, TPiece, IPiece, ZPiece, SPiece] 
+
+    return pieceArray[Math.floor(Math.random() * 6)];
   }
 
   function place(){
