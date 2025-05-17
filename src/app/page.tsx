@@ -2,6 +2,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Tetromino } from "./tetromino";
 
+/*
+Alternatives to improve code
+- Tuck all movement into 1 function
+- Consider making useRef of the currentPosition
+- currentPiece is still needed for Rotation
+ */
+
 export default function Game(){
   const xPosCurrent = useRef(4);
   const yPosCurrent = useRef(17);
@@ -80,6 +87,7 @@ export default function Game(){
   }
 
   function moveLeft(){
+
     if (xPosCurrent.current > 0) {
     var newArray = removePiece();
     xPosCurrent.current -= 1; // why does this work and not setState?
@@ -96,8 +104,14 @@ export default function Game(){
       setCurrentBoardArray(newArray);
     }
   }
+  
+  function checkCollision(){
+    
+  }
 
   function moveDown(){
+    var skirt = getSkirt()
+
     if (yPosCurrent.current == 0) {
       place()
     }
@@ -157,6 +171,8 @@ export default function Game(){
   }
 
   function place(){
+    console.log(yPosCurrent.current)
+    console.log(bodyCurrentPiece.current)
     var positionCurrentPiece = calculatePosition(bodyCurrentPiece.current, xPosCurrent.current, yPosCurrent.current)
     // Lock the current piece in place
     var newArray = [...currentBoardArray];
@@ -164,7 +180,6 @@ export default function Game(){
       newArray[x][y] = 2;
     } 
     
-    console.log("Locked!")
     // Create new piece
     bodyCurrentPiece.current = createPiece();
     xPosCurrent.current = 4;
@@ -179,8 +194,8 @@ export default function Game(){
   }
 
   function makeFallingPiece(){
-    let timer = setTimeout(makeFallingPiece, 1000);
     moveDown();
+    let timer = setTimeout(makeFallingPiece, 1000);
   }
 
     return (<div>
@@ -214,7 +229,7 @@ function Cell({ xPos, yPos, filled }){
   if (filled)
     return (<div className="filled-cell"></div>)
   
-  return (<div className="cell">{xPos}, {yPos}</div>);
+  return (<div className="cell"></div>);
 }
 
 function createEmptyArray( rows: number, columns: number ){
